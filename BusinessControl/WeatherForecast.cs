@@ -1,4 +1,4 @@
-namespace WorkersService
+namespace BusinessControlService
 {
     public class WeatherForecast
     {

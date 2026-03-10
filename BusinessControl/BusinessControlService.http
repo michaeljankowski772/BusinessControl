@@ -1,0 +1,9 @@
+@BusinessControlService_HostAddress = http://localhost:5006
+
+GET {{BusinessControlService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+GET {{BusinessControlService_HostAddress}}/workers/
+Accept: application/json
+
+###
