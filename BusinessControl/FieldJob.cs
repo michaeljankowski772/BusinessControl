@@ -7,7 +7,14 @@
         public required Worker Worker { get; set; }
         public int? CustomerId { get; set; }
         public Customer? Customer { get; set; }
-        public MachineTypeEnum MachineType { get; set; }
+        public required Machine Machine { get; set; }
+        public DateTime? DateStart { get; set; }
+        public DateTime? DateEnd { get; set; }
+        public float FieldArea { get; set; }
+        public float Latitude { get; set; }
+        public float Longitude { get; set; }
+
+
 
 
     }

@@ -14,5 +14,6 @@ namespace BusinessControlService
         public DbSet<MachineJob> MachineJobs { get; set; }
         public DbSet<FieldJob> FieldJobs { get; set; }
         public DbSet<Worker> Workers { get; set; }
+        public DbSet<Machine> Machines { get; set; }
     }
 }

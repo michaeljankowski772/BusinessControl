@@ -22,8 +22,27 @@ using (var scope = app.Services.CreateScope())
     if (!context.Workers.Any())
     {
         context.Workers.AddRange(
-            new Worker { FirstName = "John", LastName = "Brown", IsHired = true, HiringDateStart = new DateTime(2015, 1, 1), HiringDateEnd = new DateTime(2017,2,2)},
+            new Worker { FirstName = "John", LastName = "Brown", IsHired = true, HiringDateStart = new DateTime(2015, 1, 1), HiringDateEnd = new DateTime(2017, 2, 2) },
             new Worker { FirstName = "Chris", LastName = "Grease", IsHired = true, HiringDateStart = new DateTime(2015, 1, 1), HiringDateEnd = new DateTime(2017, 2, 2) }
+        );
+
+        context.SaveChanges();
+    }
+
+    if (!context.Customers.Any())
+    {
+        context.Customers.AddRange(
+            new Customer { FirstName = "Cus", LastName = "Tomer", Address = "Road 1/2", City = "City1" },
+            new Customer { FirstName = "Leom", LastName = "Essi", Address = "Roadski", City = "London" }
+        );
+
+        context.SaveChanges();
+    }
+
+    if (!context.Machines.Any())
+    {
+        context.Machines.AddRange(
+            new Machine { AcquisitionDate = new DateTime(2021, 12, 12, 8, 1, 1), MachineName = "Tractor1", MachineType = MachineTypeEnum.Tractor}
         );
 
         context.SaveChanges();
@@ -40,8 +59,8 @@ using (var scope = app.Services.CreateScope())
 
     if (!context.FieldJobs.Any() && context.Workers.Count() > 0)
     {
-        context.WorkshopJobs.AddRange(
-            new WorkshopJob { Worker = context.Workers.First(), DateStart = new DateTime(2025, 12, 12, 8, 1, 1), DateEnd = new DateTime(2025, 12, 12, 15, 44, 43), Description = "Cleaning floor" }
+        context.FieldJobs.AddRange(
+            new FieldJob { Worker = context.Workers.First(), Customer = context.Customers.First(), FieldArea = 5.5F, Latitude = 51.5F, Longitude = 50.5F, Machine = context.Machines.First(), DateStart = new DateTime(2025, 12, 12, 8, 1, 1), DateEnd = new DateTime(2025, 12, 12, 15, 44, 43)}
         );
 
         context.SaveChanges();
