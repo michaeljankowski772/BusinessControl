@@ -6,4 +6,7 @@ Accept: application/json
 GET {{BusinessControlService_HostAddress}}/workers/
 Accept: application/json
 
+GET {{BusinessControlService_HostAddress}}/workshopjobss/
+Accept: application/json
+
 ###

@@ -28,6 +28,15 @@ using (var scope = app.Services.CreateScope())
 
         context.SaveChanges();
     }
+
+    if (!context.WorkshopJobs.Any() && context.Workers.Count() > 0)
+    {
+        context.WorkshopJobs.AddRange(
+            new WorkshopJob { Worker = context.Workers.First(), DateStart = new DateTime(2025, 12, 12, 8, 1, 1), DateEnd = new DateTime(2025, 12, 12, 15, 44, 43), Description = "Cleaning floor" }
+        );
+
+        context.SaveChanges();
+    }
 }
 
 
