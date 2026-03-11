@@ -7,6 +7,7 @@
         public required Worker Worker { get; set; }
         public int? CustomerId { get; set; }
         public Customer? Customer { get; set; }
+        public MachineTypeEnum MachineType { get; set; }
 
 
     }

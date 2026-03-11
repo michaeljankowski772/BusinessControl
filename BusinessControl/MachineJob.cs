@@ -9,9 +9,7 @@
         public DateTime? DateEnd { get; set; }
         public string Description { get; set; } = string.Empty;
         public MaintenanceTypeEnum MaintenanceType { get; set; }
-        public MachineTypeEnum MachineType { get; set; }
-
-
+        public required Machine Machine { get; set; }
 
     }
 }
