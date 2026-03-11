@@ -1,6 +1,6 @@
 ﻿namespace BusinessControlService
 {
-    public class Job
+    public class FieldJob
     {
         public int Id { get; set; }
         public int WorkerId { get; set; }

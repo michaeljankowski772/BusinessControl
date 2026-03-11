@@ -10,7 +10,7 @@ namespace BusinessControlService
         }
 
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Job> Jobs { get; set; }
+        public DbSet<WorkshopJob> Jobs { get; set; }
         public DbSet<Worker> Workers { get; set; }
     }
 }
