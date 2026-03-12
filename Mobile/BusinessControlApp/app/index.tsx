@@ -15,6 +15,7 @@ export default function Index() {
 }
  */
 
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
@@ -65,7 +66,8 @@ export default function App() {
       {jobs.map(job => (
         <Text key={job.id}>{job.id}</Text>
       ))}
-      {<Text>{jobs.length} jobs</Text>}
+      <Text>{jobs.length} jobs count</Text>
+      <Link href={"/Views/login"}>Go to Login</Link>
     </View>
   );
 }
