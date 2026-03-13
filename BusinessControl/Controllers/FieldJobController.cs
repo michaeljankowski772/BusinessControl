@@ -1,3 +1,5 @@
+using BusinessControlService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,19 +7,16 @@ namespace BusinessControlService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class FieldJobsController : ControllerBase
+    public class FieldJobController : ControllerBase
     {
-        /*private static readonly string[] Summaries =
-        [
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        ];*/
 
         private readonly AppDbContext _context;
-        public FieldJobsController(AppDbContext context)
+        public FieldJobController(AppDbContext context)
         {
             _context = context;
         }
 
+        [Authorize]
         [HttpGet("GetFieldJobsFull")]
         public async Task<ActionResult<IEnumerable<FieldJob>>> GetFieldJobsWithWorkers()
         {

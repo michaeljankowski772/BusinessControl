@@ -1,4 +1,4 @@
-﻿namespace BusinessControlService
+﻿namespace BusinessControlService.Models.Enums
 {
     public enum MachineTypeEnum
     {

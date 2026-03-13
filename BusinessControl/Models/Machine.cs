@@ -1,4 +1,6 @@
-﻿namespace BusinessControlService
+﻿using BusinessControlService.Models.Enums;
+
+namespace BusinessControlService.Models
 {
     public class Machine
     {

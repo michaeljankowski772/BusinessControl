@@ -1,3 +1,5 @@
+using BusinessControlService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,15 +7,10 @@ namespace BusinessControlService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WorkshopJobsController : ControllerBase
+    public class WorkshopJobController : ControllerBase
     {
-        /*private static readonly string[] Summaries =
-        [
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        ];*/
-
         private readonly AppDbContext _context;
-        public WorkshopJobsController(AppDbContext context)
+        public WorkshopJobController(AppDbContext context)
         {
             _context = context;
         }
@@ -24,6 +21,7 @@ namespace BusinessControlService.Controllers
             return await _context.WorkshopJobs.Include(z=>z.Worker).ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("GetWorkshopJobs")]
         public async Task<ActionResult<IEnumerable<WorkshopJob>>> GetWorkshopJobs()
         {

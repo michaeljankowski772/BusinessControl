@@ -1,4 +1,4 @@
-﻿namespace BusinessControlService
+﻿namespace BusinessControlService.Models
 {
     public class FieldJob
     {
