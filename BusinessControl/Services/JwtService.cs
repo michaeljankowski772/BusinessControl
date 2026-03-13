@@ -14,7 +14,7 @@ namespace BusinessControlService.Services
             _config = config;
         }
 
-        public string GenerateJwt(string userId, string email)
+        public string GenerateJwt(string userId, string username)
         {
             var handler = new JwtSecurityTokenHandler();
 
@@ -25,7 +25,7 @@ namespace BusinessControlService.Services
                 Subject = new ClaimsIdentity(new[]
                 {
                 new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, email)
+                new Claim(ClaimTypes.Name, username)
             }),
 
                 Expires = DateTime.UtcNow.AddHours(2),

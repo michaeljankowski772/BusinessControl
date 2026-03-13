@@ -1,24 +1,30 @@
-import { Link, useLocalSearchParams } from 'expo-router';
+import { useRouter } from "expo-router";
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-export default function Login() {
+
+export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { created } = useLocalSearchParams();
+    const router = useRouter();
 
-    const handleLogin = () => {
+    type IdentityError = {
+        code: string
+        description: string
+    }
+
+    const handleRegister = () => {
         if (!username || !password) {
             setError('Please fill in all fields');
             return;
         }
 
-        async function parseLogin() {
+        async function parseRegister() {
 
             try {
 
-                const response = await fetch("https://192.168.0.171:7242/api/auth/login", {
+                const response = await fetch("https://192.168.0.171:7242/api/auth/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -28,18 +34,18 @@ export default function Login() {
 
 
                 if (!response.ok) {
+                    const errors: IdentityError[] = await response.json();
+
+                    const message = errors.map(e => e.description).join("\n");
+
                     if (response.status === 401) {
-                        throw new Error("Nieprawidłowy login lub hasło");
+                        throw new Error("Nieprawidłowy login lub hasło. " + message);
                     }
 
-                    throw new Error("HTTP error: " + response.status);
+                    throw new Error("HTTP error: " + response.status + ". " + message);
                 }
 
-
-                const data = await response.json();
-
-                console.log(data.token);
-                return data.token;
+                router.push("/views/login?created=1");
 
             } catch (err) {
 
@@ -50,7 +56,7 @@ export default function Login() {
 
         }
 
-        parseLogin();
+        parseRegister();
 
 
         console.log('Login:', { username, password });
@@ -58,12 +64,7 @@ export default function Login() {
 
     return (
         <View style={styles.container}>
-            {created && (
-        <Text style={{color:"green"}}>
-          Konto zostało utworzone ✔
-        </Text>
-      )}
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title}>Register</Text>
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -83,18 +84,9 @@ export default function Login() {
                 secureTextEntry
             />
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Sign In</Text>
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                <Text style={styles.buttonText}>Create account</Text>
             </TouchableOpacity>
-
-            <View style={styles.footer}>
-                <Text style={styles.footerText}>
-                    Don't have an account?{' '}
-                    <Link href="/views/register" style={styles.linkText}>
-                        Register
-                    </Link>
-                </Text>
-            </View>
         </View>
     );
 }
@@ -106,7 +98,4 @@ const styles = StyleSheet.create({
     error: { color: 'red', marginBottom: 15, textAlign: 'center' },
     button: { backgroundColor: '#007AFF', padding: 12, borderRadius: 5, alignItems: 'center' },
     buttonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-    footer: { marginTop: 16, alignItems: 'center' },
-    footerText: { fontSize: 14, color: '#555' },
-    linkText: { color: '#007AFF', fontWeight: 'bold' },
 });
