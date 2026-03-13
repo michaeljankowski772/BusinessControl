@@ -1,18 +1,57 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function Login() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const handleLogin = () => {
-        if (!email || !password) {
+        if (!username || !password) {
             setError('Please fill in all fields');
             return;
         }
-        // TODO: Handle login logic
-        console.log('Login:', { email, password });
+
+        async function parseLogin() {
+
+            try {
+
+                const response = await fetch("https://192.168.0.171:7242/api/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error("Nieprawidłowy login lub hasło");
+                    }
+
+                    throw new Error("HTTP error: " + response.status);
+                }
+
+
+                const data = await response.json();
+
+                console.log(data.token);
+                return data.token;
+
+            } catch (err) {
+
+                console.log("API ERROR:", err);
+                setError(err.message);
+
+            }
+
+        }
+
+        parseLogin();
+
+
+        console.log('Login:', { username, password });
     };
 
     return (
@@ -23,10 +62,10 @@ export default function Login() {
 
             <TextInput
                 style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
+                placeholder="Nickname"
+                value={username}
+                onChangeText={setUsername}
+                keyboardType="default"
             />
 
             <TextInput

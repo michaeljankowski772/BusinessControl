@@ -30,7 +30,7 @@ export default function App() {
 
       try {
 
-        const response = await fetch("https://192.168.0.171:7242/workshopjobs/getworkshopjobs");
+        const response = await fetch("https://192.168.0.171:7242/workshopjob/getworkshopjobs");
 
         if (!response.ok) {
           throw new Error("HTTP error: " + response.status);
@@ -67,7 +67,7 @@ export default function App() {
         <Text key={job.id}>{job.id}</Text>
       ))}
       <Text>{jobs.length} jobs count</Text>
-      <Link href={"/Views/login"}>Go to Login</Link>
+      <Link href={"/views/login"}>Go to Login</Link>
     </View>
   );
 }

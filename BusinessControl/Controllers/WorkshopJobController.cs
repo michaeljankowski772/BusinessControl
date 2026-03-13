@@ -15,13 +15,14 @@ namespace BusinessControlService.Controllers
             _context = context;
         }
 
+        //[Authorize]
         [HttpGet("GetWorkshopJobsFull")]
         public async Task<ActionResult<IEnumerable<WorkshopJob>>> GetWorkshopJobsWithWorkers()
         {
             return await _context.WorkshopJobs.Include(z=>z.Worker).ToListAsync();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetWorkshopJobs")]
         public async Task<ActionResult<IEnumerable<WorkshopJob>>> GetWorkshopJobs()
         {

@@ -22,7 +22,7 @@ namespace BusinessControlService.Controllers
             return await _context.Workers.ToListAsync();
         }*/
 
-        [Authorize]
+        //[Authorize]
         [HttpGet(Name = "GetWorkers")]
         public async Task<ActionResult<IEnumerable<Worker>>> GetWorkers()
         {

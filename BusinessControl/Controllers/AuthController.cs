@@ -50,7 +50,7 @@ namespace BusinessControlService.Controllers
             if (!valid)
                 return Unauthorized();
 
-            var token = _jwtService.GenerateJwt(user.Id, user.UserName);
+            var token = _jwtService.GenerateJwt(user.Id, user.UserName!);
 
             return Ok(new { token });
         }

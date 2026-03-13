@@ -16,7 +16,7 @@ namespace BusinessControlService.Controllers
             _context = context;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetFieldJobsFull")]
         public async Task<ActionResult<IEnumerable<FieldJob>>> GetFieldJobsWithWorkers()
         {
