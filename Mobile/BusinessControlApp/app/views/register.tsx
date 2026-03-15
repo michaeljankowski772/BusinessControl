@@ -16,7 +16,7 @@ export default function Register() {
 
     const handleRegister = () => {
         if (!username || !password) {
-            setError('Please fill in all fields');
+            setError('Proszę wypełnić wszystkie pola');
             return;
         }
 

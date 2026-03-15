@@ -1,8 +1,11 @@
 using BusinessControlService.Models;
 using BusinessControlService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BusinessControlService.Controllers
 {
@@ -55,5 +58,21 @@ namespace BusinessControlService.Controllers
             return Ok(new { token });
         }
 
+        [Authorize]
+        [HttpGet("test")]
+        public async Task<IActionResult> IsUserAuthenticated()
+        {
+            var user = User;
+            var isAuthenticated = User.Identity != null && User.Identity.IsAuthenticated;
+            return Ok(new { isAuthenticated });
+        }
+
+        private bool IsUserAuthenticated(string userName)
+        {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+                return false;
+            var claim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name && c.Value == userName);
+            return claim != null;
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { Link, useLocalSearchParams } from 'expo-router';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -7,10 +7,11 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const { created } = useLocalSearchParams();
+    const router = useRouter();
 
     const handleLogin = () => {
         if (!username || !password) {
-            setError('Please fill in all fields');
+            setError('Proszę wypełnić wszystkie pola');
             return;
         }
 
@@ -39,7 +40,19 @@ export default function Login() {
                 const data = await response.json();
 
                 console.log(data.token);
-                return data.token;
+
+                //await AsyncStorage.setItem("accessToken", data.accessToken);
+                //await AsyncStorage.setItem("refreshToken", data.refreshToken);
+
+
+                const testResponse = await fetch("https://192.168.0.171:7242/api/auth/test", {
+                    headers: {
+                        Authorization: "Bearer " + data.token
+                    }
+                });
+                const testData = await testResponse.json();
+                console.log(testData.isAuthenticated);
+                //router.push("/views/testpanel1");
 
             } catch (err) {
 
@@ -59,10 +72,10 @@ export default function Login() {
     return (
         <View style={styles.container}>
             {created && (
-        <Text style={{color:"green"}}>
-          Konto zostało utworzone ✔
-        </Text>
-      )}
+                <Text style={{ color: "green" }}>
+                    Konto zostało utworzone.
+                </Text>
+            )}
             <Text style={styles.title}>Login</Text>
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
