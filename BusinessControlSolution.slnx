@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="BusinessControl/BusinessControlService.csproj" />
+  <Project Path="BusinessControlTest/BusinessControlTest.csproj" Id="c9de38a6-d69e-4036-8704-2d3b57a6c132" />
 </Solution>
