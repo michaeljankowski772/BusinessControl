@@ -89,7 +89,7 @@ namespace BusinessControlService.Controllers
             });
         }
 
-        /*[HttpPost("refresh")]
+        [HttpPost("refresh")]
         public async Task<IActionResult> Refresh(RefreshRequest model)
         {
             var user = _userManager.Users
@@ -104,7 +104,7 @@ namespace BusinessControlService.Controllers
             var token = _jwtService.GenerateJwt(user.Id, user.UserName!);
 
             return Ok(new { token });
-        }*/
+        }
 
         [Authorize]
         [HttpGet("test")]

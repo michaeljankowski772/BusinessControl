@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -39,10 +40,11 @@ export default function Login() {
 
                 const data = await response.json();
 
-                console.log(data.token);
+                console.log("Token: " + data.token);
+                console.log("Refresh token: " + data.refreshToken);
 
-                //await AsyncStorage.setItem("accessToken", data.accessToken);
-                //await AsyncStorage.setItem("refreshToken", data.refreshToken);
+                await AsyncStorage.setItem("accessToken", data.token);
+                await AsyncStorage.setItem("refreshToken", data.refreshToken);
 
 
                 const testResponse = await fetch("https://192.168.0.171:7242/api/auth/test", {
@@ -52,6 +54,7 @@ export default function Login() {
                 });
                 const testData = await testResponse.json();
                 console.log(testData.isAuthenticated);
+                console.log("Storage access token: " + await AsyncStorage.getItem("accessToken"));
                 //router.push("/views/testpanel1");
 
             } catch (err) {
