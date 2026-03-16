@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BusinessControlService
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -17,5 +17,7 @@ namespace BusinessControlService
         public DbSet<FieldJob> FieldJobs { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<Machine> Machines { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
+
     }
 }

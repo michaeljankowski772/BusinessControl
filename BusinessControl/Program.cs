@@ -31,7 +31,7 @@ builder.Services.AddCors(options =>
 });
 
 // for the purpose of simplicity we wont force strong passwords for now
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequireUppercase = false;
