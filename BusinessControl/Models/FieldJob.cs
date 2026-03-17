@@ -13,6 +13,9 @@
         public float FieldArea { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
+        public float FieldAreaAccepted { get; set; }
+        public float PricePerArea { get; set; }
+        public float PricePerAreaAccepted { get; set; }
 
 
 
