@@ -35,7 +35,7 @@ namespace BusinessControlService.Controllers
 
             if (existing == null)
             {
-                _context.FieldJobs.Add(fieldJob);
+                await _context.FieldJobs.AddAsync(fieldJob);
             }
             else
             {
