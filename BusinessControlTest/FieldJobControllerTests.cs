@@ -20,7 +20,7 @@ namespace BusinessControlTest
         private AppDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("FieldJobTestDb")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             return new AppDbContext(options);
@@ -137,7 +137,7 @@ namespace BusinessControlTest
 
             var result = await controller.SetFieldJob(null);
 
-            Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<BadRequestObjectResult>(result.Result);
         }
     }
 }
