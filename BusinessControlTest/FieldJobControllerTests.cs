@@ -2,6 +2,7 @@
 using BusinessControlService.Controllers;
 using BusinessControlService.Models;
 using BusinessControlService.Models.Enums;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -114,8 +115,15 @@ namespace BusinessControlTest
 
             Assert.IsType<OkObjectResult>(result.Result);
             Assert.Single(context.FieldJobs);
-            var fieldJobToUpdate = await context.FieldJobs.FindAsync(1);
-            Assert.NotNull(fieldJobToUpdate);
+
+            var resultGetFieldJob = await controller.GetFieldJob(1);
+
+            var okResult = Assert.IsType<Ok<FieldJob>>(resultGetFieldJob);
+            var fieldJobToUpdate = okResult.Value;
+            Assert.IsType<FieldJob>(fieldJobToUpdate);
+
+
+            Assert.Equal(1, fieldJobToUpdate.Id);
 
             fieldJobToUpdate.FieldArea = 2.2f;
 
@@ -123,9 +131,13 @@ namespace BusinessControlTest
             Assert.IsType<OkObjectResult>(result.Result);
             Assert.Single(context.FieldJobs);
 
-            var dbEntity = await context.FieldJobs.FindAsync(1);
-            Assert.NotNull(dbEntity);
-            Assert.Equal(2.2f, dbEntity.FieldArea);
+
+            var resultGetFieldJobUpdated = await controller.GetFieldJob(1);
+            
+            var okResultUpdated = Assert.IsType<Ok<FieldJob>>(resultGetFieldJobUpdated);
+            var fieldJobUpdated = okResultUpdated.Value;
+            Assert.IsType<FieldJob>(fieldJobUpdated);
+            Assert.Equal(2.2f, fieldJobUpdated.FieldArea);
         }
 
         [Fact]

@@ -2,6 +2,7 @@ using BusinessControlService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BusinessControlService.Controllers
 {
@@ -45,6 +46,20 @@ namespace BusinessControlService.Controllers
            
             await _context.SaveChangesAsync();
             return Ok(fieldJob);
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IResult> GetFieldJob(int id)
+        {
+            var fieldJob = await _context.FieldJobs
+                .Include(f => f.Worker)
+                .Include(f => f.Customer)
+                .FirstOrDefaultAsync(f => f.Id == id);
+
+            return fieldJob is not null
+                ? TypedResults.Ok(fieldJob)
+                : TypedResults.NotFound();
         }
 
     }
