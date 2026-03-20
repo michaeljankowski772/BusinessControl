@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { register } from "../api/auth";
 
 
 export default function Register() {
@@ -9,12 +10,22 @@ export default function Register() {
     const [error, setError] = useState('');
     const router = useRouter();
 
-    type IdentityError = {
-        code: string
-        description: string
-    }
+    const handleRegister = async () => {
+        if (!username || !password) {
+            setError('Proszę wypełnić wszystkie pola');
+            return;
+        }
 
-    const handleRegister = () => {
+        try {
+            await register(username, password);
+            router.push("/views/login?created=1");
+        } catch (err: any) {
+            console.log("API ERROR:", err);
+            setError(err.message);
+        }
+    };
+
+    /* const handleRegister = () => {
         if (!username || !password) {
             setError('Proszę wypełnić wszystkie pola');
             return;
@@ -24,7 +35,7 @@ export default function Register() {
 
             try {
 
-                const response = await fetch("https://192.168.0.171:7242/api/auth/register", {
+                const response = await fetch(`${API_URL}/api/auth/register`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -60,7 +71,7 @@ export default function Register() {
 
 
         console.log('Login:', { username, password });
-    };
+    }; */
 
     return (
         <View style={styles.container}>

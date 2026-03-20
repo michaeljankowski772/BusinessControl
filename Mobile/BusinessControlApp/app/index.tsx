@@ -23,6 +23,7 @@ export default function App() {
 
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   useEffect(() => {
 
@@ -30,7 +31,8 @@ export default function App() {
 
       try {
 
-        const response = await fetch("https://192.168.0.171:7242/workshopjob/getworkshopjobs");
+        console.log(API_URL);
+        const response = await fetch(`${API_URL}/workshopjob/getworkshopjobs`);
 
         if (!response.ok) {
           throw new Error("HTTP error: " + response.status);

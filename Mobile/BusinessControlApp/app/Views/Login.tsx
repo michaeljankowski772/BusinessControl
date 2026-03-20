@@ -1,7 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { login } from "../api/auth";
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -10,7 +10,18 @@ export default function Login() {
     const { created } = useLocalSearchParams();
     const router = useRouter();
 
-    const handleLogin = () => {
+
+
+    const handleLogin = async () => {
+        try {
+            await login(username, password);
+            router.push("/views/testpanel1");
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    /* const handleLogin = () => {
         if (!username || !password) {
             setError('Proszę wypełnić wszystkie pola');
             return;
@@ -20,7 +31,8 @@ export default function Login() {
 
             try {
 
-                const response = await fetch("https://192.168.0.171:7242/api/auth/login", {
+                //const response = await fetch("https://192.168.0.171:7242/api/auth/login", {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -47,15 +59,16 @@ export default function Login() {
                 await AsyncStorage.setItem("refreshToken", data.refreshToken);
 
 
-                const testResponse = await fetch("https://192.168.0.171:7242/api/auth/test", {
+                /* const testResponse = await fetch("https://192.168.0.171:7242/api/auth/test", {
                     headers: {
                         Authorization: "Bearer " + data.token
                     }
                 });
                 const testData = await testResponse.json();
-                console.log(testData.isAuthenticated);
+                console.log(testData.isAuthenticated); 
                 console.log("Storage access token: " + await AsyncStorage.getItem("accessToken"));
                 //router.push("/views/testpanel1");
+                router.push("/views/testpanel1");
 
             } catch (err) {
 
@@ -70,7 +83,7 @@ export default function Login() {
 
 
         console.log('Login:', { username, password });
-    };
+    }; */
 
     return (
         <View style={styles.container}>

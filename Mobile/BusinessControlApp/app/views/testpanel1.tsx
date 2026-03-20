@@ -15,7 +15,7 @@ export default function Dashboard() {
 
     const token = await AsyncStorage.getItem("token");
 
-    const response = await fetch("http://192.168.0.171:5006/workshopjobs/getworkshopjobs", {
+    const response = await fetch("http://192.168.0.171:5006/fieldjobs/getfieldjobs", {
       headers: {
         Authorization: "Bearer " + token
       }
