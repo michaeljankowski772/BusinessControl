@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace BusinessControlService.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("fieldjobs")]
     public class FieldJobController : ControllerBase
     {
 
@@ -22,6 +22,14 @@ namespace BusinessControlService.Controllers
         public async Task<ActionResult<IEnumerable<FieldJob>>> GetFieldJobsWithWorkers()
         {
             return await _context.FieldJobs.Include(z => z.Worker).Include(z => z.Machine).ToListAsync();
+        }
+        
+
+        [Authorize]
+        [HttpGet("getfieldjobs")]
+        public async Task<ActionResult<IEnumerable<FieldJob>>> GetFieldJobs()
+        {
+            return await _context.FieldJobs.ToListAsync();
         }
 
         [Authorize]

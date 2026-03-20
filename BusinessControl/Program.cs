@@ -24,7 +24,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReact",
         policy =>
         {
-            policy.WithOrigins("http://localhost:8081")
+            policy.AllowAnyOrigin()
+            //.WithOrigins("http://localhost:8081")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -124,7 +125,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
