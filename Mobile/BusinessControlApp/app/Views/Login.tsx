@@ -15,7 +15,7 @@ export default function Login() {
     const handleLogin = async () => {
         try {
             await login(username, password);
-            router.push("/views/testpanel1");
+            router.push("/views/fieldjobs/getall");
         } catch (err) {
             setError(err.message);
         }
