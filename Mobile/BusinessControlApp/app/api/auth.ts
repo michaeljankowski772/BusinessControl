@@ -1,3 +1,4 @@
+import { setTokens } from "../services/tokenService";
 const API_URL = process.env.EXPO_PUBLIC_API_URL as string;
 
 type IdentityError = {
@@ -26,7 +27,10 @@ export const login = async (username: string, password: string): Promise<AuthRes
         throw new Error(`HTTP error: ${response.status}`);
     }
 
-    return response.json();
+    const data: AuthResponse = await response.json();
+
+    await setTokens(data.token, data.refreshToken);
+    return data;
 };
 
 export const register = async (username: string, password: string): Promise<void> => {

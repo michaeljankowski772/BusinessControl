@@ -1,38 +1,32 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import { FieldJob, getFieldJobs } from "../api/fieldjob";
 
 export default function Dashboard() {
 
-  const [jobs, setJobs] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<FieldJob[]>([]);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     loadJobs();
   }, []);
 
-  async function loadJobs() {
-
-    const token = await AsyncStorage.getItem("token");
-
-    const response = await fetch("http://192.168.0.171:5006/fieldjobs/getfieldjobs", {
-      headers: {
-        Authorization: "Bearer " + token
-      }
-    });
-
-    const data = await response.json();
-
-    setJobs(data);
-  }
+  const loadJobs = async () => {
+    try {
+      const data = await getFieldJobs();
+      setJobs(data);
+    } catch (err: any) {
+      console.log("API ERROR:", err);
+      setError(err.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
 
-      {/* przycisk menu */}
       <Button title="Menu" onPress={() => setMenuVisible(!menuVisible)} />
 
-      {/* wysuwany panel */}
       {menuVisible && (
         <View style={styles.sidebar}>
           <Text style={styles.menuItem}>Jobs: {jobs.length}</Text>
@@ -43,7 +37,8 @@ export default function Dashboard() {
 
       <Text style={styles.title}>Workshop Jobs</Text>
 
-      {/* tabela */}
+      {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
+
       <FlatList
         data={jobs}
         keyExtractor={(item) => item.id.toString()}
@@ -58,7 +53,6 @@ export default function Dashboard() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
 
   container: {

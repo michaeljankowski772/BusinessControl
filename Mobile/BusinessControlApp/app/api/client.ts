@@ -5,6 +5,8 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL as string;
 export const apiFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
     let token = await getAccessToken();
 
+    console.log("API Fetch - Access Token:", token);
+
     let response = await fetch(`${API_URL}${url}`, {
         ...options,
         headers: {
@@ -14,8 +16,10 @@ export const apiFetch = async (url: string, options: RequestInit = {}): Promise<
         },
     });
 
+    console.log("t1", response.status);
     if (response.status === 401) {
         const refreshToken = await getRefreshToken();
+        console.log("API Fetch - refresh Token:", refreshToken);
 
         if (!refreshToken) {
             throw new Error("Brak refresh tokena");
@@ -26,6 +30,7 @@ export const apiFetch = async (url: string, options: RequestInit = {}): Promise<
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ refreshToken }),
         });
+        console.log("t2", refreshResponse.status);
 
         if (!refreshResponse.ok) {
             throw new Error("Sesja wygasła");
