@@ -33,6 +33,31 @@ namespace BusinessControlService.Controllers
         }
 
         [Authorize]
+        [HttpGet("getfieldjobswithheaders")]
+        public async Task<ActionResult> GetFieldJobsWithHeaders()
+        {
+            var jobs = await _context.FieldJobs.Select(z=> new
+            {
+                Id = z.Id,
+                CustomerFirstName = z.Customer != null ? z.Customer.FirstName : "",
+                CustomerLastName = z.Customer != null ? z.Customer.LastName : "",
+                WorkerFirstName = z.Worker.FirstName,
+                WorkerLastName = z.Worker.LastName,
+                FieldArea = z.FieldArea
+            }).ToListAsync();
+
+            var columns = new List<string> { "Id", "CustomerFirstName", "CustomerLastName", "WorkerFirstName", "WorkerLastName", "FieldArea" };
+
+            var result = new
+            {
+                columns, 
+                data = jobs
+            };
+
+            return Ok(result);
+        }
+
+        [Authorize]
         [HttpPost("SetFieldJob")]
         public async Task<ActionResult<IEnumerable<FieldJob>>> SetFieldJob([FromBody] FieldJob fieldJob)
         {

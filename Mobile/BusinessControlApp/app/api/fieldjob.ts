@@ -1,9 +1,14 @@
+import { FieldJob, FieldJobsResponse } from "../helpers/translations";
 import { apiFetch } from "./client";
 
-export type FieldJob = {
-  id: number;
-  name: string;
-};
+
+
+export const columnKeyMap: Record<string, keyof FieldJob> = {
+    Id: "id",
+    Name: "name",
+    Status: "status",
+  };
+
 
 export const getFieldJobs = async (): Promise<FieldJob[]> => {
   const response = await apiFetch("/fieldjobs/getfieldjobs");
@@ -13,6 +18,20 @@ export const getFieldJobs = async (): Promise<FieldJob[]> => {
   }
 
   return response.json();
+};
+
+export const getFieldJobsWithHeaders = async (): Promise<FieldJobsResponse> => {
+
+
+  const response = await apiFetch("/fieldjobs/getfieldjobswithheaders");
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+
+  const result: FieldJobsResponse = await response.json();
+        console.log("FieldJobsResponse", result);
+
+  return result;
 };
 
 //todo implement cache

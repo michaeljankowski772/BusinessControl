@@ -2,7 +2,6 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Button,
   RefreshControl,
   StyleSheet,
   Text,
@@ -11,12 +10,17 @@ import {
 } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import {
-  FieldJob,
-  getFieldJobs,
+  getFieldJobsWithHeaders
 } from "../../api/fieldjob";
+import {
+  COLUMNS,
+  FieldJob,
+  FieldJobsResponse
+} from "../../helpers/translations";
 
 export default function Dashboard() {
   const [jobs, setJobs] = useState<FieldJob[]>([]);
+  const [columns, setColumns] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
@@ -31,8 +35,9 @@ export default function Dashboard() {
     try {
       if (initial) setLoading(true);
 
-      const data = await getFieldJobs();
-      setJobs(data);
+      const res: FieldJobsResponse = await getFieldJobsWithHeaders();
+      setColumns(res.columns); 
+      setJobs(res.data);       
     } catch (err: any) {
       console.log("API ERROR:", err);
       setError(err.message);
@@ -68,11 +73,12 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
-        <Button title="Add Job" onPress={() => router.push("./create")} />
+      {}
+      <View style={styles.headerRow}>
+        {columns.map((c) => (
+          <Text key={c} style={styles.headerCell}>{c}</Text>
+        ))}
       </View>
-
-      {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
 
       <SwipeListView
         data={jobs}
@@ -82,13 +88,16 @@ export default function Dashboard() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
 
-        renderItem={({ item }) => (
+       renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.row}
             onPress={() => router.push(`./${item.id}`)}
           >
-            <Text style={styles.cell}>{item.id}</Text>
-            <Text style={styles.cell}>{item.name}</Text>
+            {COLUMNS.map((col) => (
+              <Text key={col.key} style={styles.cell}>
+                {item[col.key]}
+              </Text>
+            ))}
           </TouchableOpacity>
         )}
 
@@ -96,44 +105,51 @@ export default function Dashboard() {
           <View style={styles.hiddenRow}>
             <TouchableOpacity
               style={styles.deleteButton}
-            //onPress={() => handleDelete(item.id)}
+              //onPress={() => handleDelete(item.id)}
             >
               <Text style={{ color: "white" }}>Delete</Text>
             </TouchableOpacity>
           </View>
         )}
 
-        rightOpenValue={-80} 
+        rightOpenValue={-80}
       />
     </View>
   );
 }
 
-
 const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  topBar: {
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: { flex: 1, padding: 20 },
+  headerRow: {
     flexDirection: "row",
-    justifyContent: "flex-end",
-    marginBottom: 10,
+    backgroundColor: "#eee",
+    borderBottomWidth: 2,
+    borderBottomColor: "#ccc",
+    paddingVertical: 10,
   },
-
+  headerCell: {
+    flex: 1,
+    fontWeight: "bold",
+    paddingHorizontal: 10,
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderRightColor: "#ccc",
+  },
   row: {
     flexDirection: "row",
-    padding: 15,
-    borderBottomWidth: 1,
+    paddingVertical: 15,
     backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
-
   cell: {
     flex: 1,
+    paddingHorizontal: 10,
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderRightColor: "#eee",
   },
-
   hiddenRow: {
     alignItems: "flex-end",
     justifyContent: "center",
@@ -141,37 +157,9 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     paddingRight: 15,
   },
-
   deleteButton: {
     backgroundColor: "red",
     padding: 10,
     borderRadius: 5,
   },
-
-  container: {
-    flex: 1,
-    padding: 20
-  },
-
-  title: {
-    fontSize: 22,
-    marginBottom: 10
-  },
-
-
-  sidebar: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 200,
-    backgroundColor: "#eee",
-    padding: 20
-  },
-
-  menuItem: {
-    marginBottom: 10,
-    fontSize: 18
-  }
-
 });
