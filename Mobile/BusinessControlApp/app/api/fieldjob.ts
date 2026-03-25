@@ -1,21 +1,9 @@
 import { FieldJob, FieldJobsResponse } from "../helpers/translations";
 import { apiFetch } from "./client";
 
-
-
-export const columnKeyMap: Record<string, keyof FieldJob> = {
-    Id: "id",
-    Name: "name",
-    Status: "status",
-  };
-
-
 export const getFieldJobs = async (): Promise<FieldJob[]> => {
   const response = await apiFetch("/fieldjobs/getfieldjobs");
 
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`);
-  }
 
   return response.json();
 };
@@ -24,9 +12,7 @@ export const getFieldJobsWithHeaders = async (): Promise<FieldJobsResponse> => {
 
 
   const response = await apiFetch("/fieldjobs/getfieldjobswithheaders");
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`);
-  }
+  
 
   const result: FieldJobsResponse = await response.json();
         console.log("FieldJobsResponse", result);
@@ -48,8 +34,14 @@ export const getFieldJobsWithHeaders = async (): Promise<FieldJobsResponse> => {
   return data;
 }; */
 
-export const getFieldJobById = (id: number) =>
-  apiFetch(`/fieldjobs/${id}`);
+export const getFieldJobById = async (id: number): Promise<FieldJob> => {
+  const response = await apiFetch(`/fieldjobs/${id}`);
+  const result: FieldJob = await response.json();
+        console.log("FieldJob", result);
+
+  return result;
+};
+
 
 export const updateFieldJob = (job: FieldJob) =>
   apiFetch(`/fieldjobs/${job.id}`, {

@@ -49,6 +49,9 @@ export const apiFetch = async (url: string, options: RequestInit = {}): Promise<
             },
         });
     }
+    else if (!response.ok && response.status !== 401) {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
 
     return response;
 };

@@ -12,11 +12,15 @@ export type FieldJobsResponse = {
   data: FieldJob[];
 };
 
- export const COLUMNS: { key: keyof FieldJob; label: string }[] = [
+  export const COLUMNS: { key: keyof FieldJob; label: string }[] = [
     { key: "id", label: "ID" },
     { key: "customerFirstName", label: "Imie klienta" },
     { key: "customerLastName", label: "Nazwisko klienta" },
     { key: "workerFirstName", label: "Imie pracownika" },
     { key: "workerLastName", label: "Nazwisko pracownika" },
     { key: "fieldArea", label: "Pole" },
-  ];
+  ]; 
+//console.log("COLUMNS at init:", COLUMNS);
+export const COLUMN_LABEL_MAP = Object.fromEntries(
+  COLUMNS.map(c => [c.key, c.label])
+) as Record<keyof FieldJob, string>;
