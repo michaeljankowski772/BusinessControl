@@ -23,7 +23,7 @@ namespace BusinessControlService.Controllers
         {
             return await _context.FieldJobs.Include(z => z.Worker).Include(z => z.Machine).ToListAsync();
         }
-        
+
 
         [Authorize]
         [HttpGet("getfieldjobs")]
@@ -36,7 +36,7 @@ namespace BusinessControlService.Controllers
         [HttpGet("getfieldjobswithheaders")]
         public async Task<ActionResult> GetFieldJobsWithHeaders()
         {
-            var jobs = await _context.FieldJobs.Select(z=> new
+            var jobs = await _context.FieldJobs.Select(z => new
             {
                 Id = z.Id,
                 CustomerFirstName = z.Customer != null ? z.Customer.FirstName : "",
@@ -50,7 +50,7 @@ namespace BusinessControlService.Controllers
 
             var result = new
             {
-                columns, 
+                columns,
                 data = jobs
             };
 
@@ -59,40 +59,64 @@ namespace BusinessControlService.Controllers
 
         [Authorize]
         [HttpPost("SetFieldJob")]
-        public async Task<ActionResult<IEnumerable<FieldJob>>> SetFieldJob([FromBody] FieldJob fieldJob)
+        public async Task<ActionResult<FieldJob>> SetFieldJob([FromBody] FieldJobDTO fieldJobDTO)
         {
-            //todo validation
-            if (fieldJob == null)
+            if (fieldJobDTO == null)
                 return BadRequest(new { Message = "FieldJob is null" });
 
-            var existing = await _context.FieldJobs.FindAsync(fieldJob.Id);
+            var existing = await _context.FieldJobs.FindAsync(fieldJobDTO.Id);
 
             if (existing == null)
             {
-                await _context.FieldJobs.AddAsync(fieldJob);
+                var newJob = new FieldJob
+                {
+                    MachineId = fieldJobDTO.MachineId,
+                    FieldArea = fieldJobDTO.FieldArea,
+                    CustomerId = fieldJobDTO.CustomerId,
+                    WorkerId = fieldJobDTO.WorkerId
+                };
+
+                await _context.FieldJobs.AddAsync(newJob);
+                await _context.SaveChangesAsync();
+
+                return Ok(newJob);
             }
             else
             {
-                //add mapping maybe?
-                _context.FieldJobs.Update(fieldJob);
+                existing.MachineId = fieldJobDTO.MachineId;
+                existing.FieldArea = fieldJobDTO.FieldArea;
+                existing.CustomerId = fieldJobDTO.CustomerId;
+                existing.WorkerId = fieldJobDTO.WorkerId;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(existing);
             }
-           
-            await _context.SaveChangesAsync();
-            return Ok(fieldJob);
         }
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IResult> GetFieldJob(int id)
+        public async Task<ActionResult<FieldJobDTO>> GetFieldJob(int id)
         {
-            var fieldJob = await _context.FieldJobs
-                .Include(f => f.Worker)
-                .Include(f => f.Customer)
-                .FirstOrDefaultAsync(f => f.Id == id);
+            if (id == 0)
+            {
+                return BadRequest(new { Message = "Id is 0" });
+            }
 
-            return fieldJob is not null
-                ? TypedResults.Ok(fieldJob)
-                : TypedResults.NotFound();
+            var job = await _context.FieldJobs.Select
+                (z => new FieldJobDTO
+                {
+                    Id = z.Id,
+                    CustomerFirstName = z.Customer != null ? z.Customer.FirstName : "",
+                    CustomerLastName = z.Customer != null ? z.Customer.LastName : "",
+                    WorkerFirstName = z.Worker.FirstName,
+                    WorkerLastName = z.Worker.LastName,
+                    FieldArea = z.FieldArea
+                }).SingleAsync(z => z.Id == id);
+
+            var columns = new List<string> { "Id", "CustomerFirstName", "CustomerLastName", "WorkerFirstName", "WorkerLastName", "FieldArea" };
+
+            return job;
         }
 
     }

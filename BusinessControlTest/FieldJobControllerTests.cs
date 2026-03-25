@@ -118,8 +118,8 @@ namespace BusinessControlTest
 
             var resultGetFieldJob = await controller.GetFieldJob(1);
 
-            var okResult = Assert.IsType<Ok<FieldJob>>(resultGetFieldJob);
-            var fieldJobToUpdate = okResult.Value;
+            var okResult = Assert.IsType<OkObjectResult>(resultGetFieldJob);
+            var fieldJobToUpdate = resultGetFieldJob.Value;
             Assert.IsType<FieldJob>(fieldJobToUpdate);
 
 
