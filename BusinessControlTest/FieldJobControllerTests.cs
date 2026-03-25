@@ -77,13 +77,18 @@ namespace BusinessControlTest
 
             var controller = new FieldJobController(context);
 
-            var newFieldJob = new FieldJob
+            var newFieldJob = new FieldJobDTO
             {
                 Id = 0,
                 FieldArea = 1.1f,
-                Machine = context.Machines.First(),
-                Worker = context.Workers.First(),
-                Customer = context.Customers.First()
+                CustomerId = context.Customers.First().Id,
+                CustomerFirstName = context.Customers.First().FirstName,
+                CustomerLastName= context.Customers.First().LastName,
+                MachineId = context.Machines.First().Id,
+                MachineName = context.Machines.First().MachineName,
+                WorkerId= context.Workers.First().Id,
+                WorkerFirstName = context.Workers.First().FirstName,
+                WorkerLastName = context.Workers.First().LastName,
             };
 
             var result = await controller.SetFieldJob(newFieldJob);
@@ -101,13 +106,18 @@ namespace BusinessControlTest
 
             Assert.Null(await context.FieldJobs.SingleOrDefaultAsync(z=>z.Id == 1));
 
-            var newFieldJob = new FieldJob
+            var newFieldJob = new FieldJobDTO
             {
-                Id = 1,
+                Id = 0,
                 FieldArea = 1.1f,
-                Machine = context.Machines.First(),
-                Worker = context.Workers.First(),
-                Customer = context.Customers.First()
+                CustomerId = context.Customers.First().Id,
+                CustomerFirstName = context.Customers.First().FirstName,
+                CustomerLastName = context.Customers.First().LastName,
+                MachineId = context.Machines.First().Id,
+                MachineName = context.Machines.First().MachineName,
+                WorkerId = context.Workers.First().Id,
+                WorkerFirstName = context.Workers.First().FirstName,
+                WorkerLastName = context.Workers.First().LastName,
             };
 
             var controller = new FieldJobController(context);
@@ -118,10 +128,9 @@ namespace BusinessControlTest
 
             var resultGetFieldJob = await controller.GetFieldJob(1);
 
-            var okResult = Assert.IsType<OkObjectResult>(resultGetFieldJob);
-            var fieldJobToUpdate = resultGetFieldJob.Value;
-            Assert.IsType<FieldJob>(fieldJobToUpdate);
+            var fieldJobToUpdate = resultGetFieldJob.Value ?? (resultGetFieldJob.Result as OkObjectResult)?.Value as FieldJobDTO;
 
+            Assert.NotNull(fieldJobToUpdate);
 
             Assert.Equal(1, fieldJobToUpdate.Id);
 
@@ -133,10 +142,11 @@ namespace BusinessControlTest
 
 
             var resultGetFieldJobUpdated = await controller.GetFieldJob(1);
-            
-            var okResultUpdated = Assert.IsType<Ok<FieldJob>>(resultGetFieldJobUpdated);
-            var fieldJobUpdated = okResultUpdated.Value;
-            Assert.IsType<FieldJob>(fieldJobUpdated);
+
+            var fieldJobUpdated = resultGetFieldJobUpdated.Value ?? (resultGetFieldJobUpdated.Result as OkObjectResult)?.Value as FieldJobDTO;
+
+            Assert.NotNull(fieldJobUpdated);
+
             Assert.Equal(2.2f, fieldJobUpdated.FieldArea);
         }
 

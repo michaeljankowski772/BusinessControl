@@ -111,7 +111,7 @@ using (var scope = app.Services.CreateScope())
     if (!context.FieldJobs.Any() && context.Workers.Count() > 0)
     {
         context.FieldJobs.AddRange(
-            new FieldJob { Worker = context.Workers.First(), Customer = context.Customers.First(), FieldArea = 5.5F, Latitude = 51.5F, Longitude = 50.5F, Machine = context.Machines.First(), DateStart = new DateTime(2025, 12, 12, 8, 1, 1), DateEnd = new DateTime(2025, 12, 12, 15, 44, 43)}
+            new FieldJob { MachineId = context.Workers.First().Id, WorkerId = context.Workers.First().Id, CustomerId = context.Customers.First().Id, FieldArea = 5.5F, Latitude = 51.5F, Longitude = 50.5F, Machine = context.Machines.First(), DateStart = new DateTime(2025, 12, 12, 8, 1, 1), DateEnd = new DateTime(2025, 12, 12, 15, 44, 43)}
         );
 
         context.SaveChanges();

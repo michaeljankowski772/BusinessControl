@@ -36,13 +36,17 @@ namespace BusinessControlService.Controllers
         [HttpGet("getfieldjobswithheaders")]
         public async Task<ActionResult> GetFieldJobsWithHeaders()
         {
-            var jobs = await _context.FieldJobs.Select(z => new
+            var jobs = await _context.FieldJobs.Select(z => new FieldJobDTO
             {
                 Id = z.Id,
+                CustomerId = z.CustomerId,
+                WorkerId = z.WorkerId,
+                MachineId = z.MachineId,
                 CustomerFirstName = z.Customer != null ? z.Customer.FirstName : "",
                 CustomerLastName = z.Customer != null ? z.Customer.LastName : "",
-                WorkerFirstName = z.Worker.FirstName,
-                WorkerLastName = z.Worker.LastName,
+                WorkerFirstName = z.Worker != null ? z.Worker.FirstName : "",
+                WorkerLastName = z.Worker != null ? z.Worker.LastName : "",
+                MachineName = z.Machine != null ? z.Machine.MachineName : "",
                 FieldArea = z.FieldArea
             }).ToListAsync();
 
@@ -107,10 +111,14 @@ namespace BusinessControlService.Controllers
                 (z => new FieldJobDTO
                 {
                     Id = z.Id,
+                    CustomerId = z.CustomerId,
+                    WorkerId = z.WorkerId,
+                    MachineId = z.MachineId,
                     CustomerFirstName = z.Customer != null ? z.Customer.FirstName : "",
                     CustomerLastName = z.Customer != null ? z.Customer.LastName : "",
-                    WorkerFirstName = z.Worker.FirstName,
-                    WorkerLastName = z.Worker.LastName,
+                    WorkerFirstName = z.Worker != null ? z.Worker.FirstName : "",
+                    WorkerLastName = z.Worker != null ? z.Worker.LastName : "",
+                    MachineName = z.Machine != null ? z.Machine.MachineName : "",
                     FieldArea = z.FieldArea
                 }).SingleAsync(z => z.Id == id);
 
