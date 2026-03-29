@@ -79,7 +79,6 @@ namespace BusinessControlTest
 
             var newFieldJob = new FieldJobDTO
             {
-                Id = 0,
                 FieldArea = 1.1f,
                 CustomerId = context.Customers.First().Id,
                 CustomerFirstName = context.Customers.First().FirstName,
@@ -91,9 +90,9 @@ namespace BusinessControlTest
                 WorkerLastName = context.Workers.First().LastName,
             };
 
-            var result = await controller.SetFieldJob(newFieldJob);
+            var result = await controller.CreateFieldJob(newFieldJob);
 
-            Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsType<CreatedAtActionResult>(result.Result);
             Assert.Single(context.FieldJobs);
         }
 
@@ -108,7 +107,6 @@ namespace BusinessControlTest
 
             var newFieldJob = new FieldJobDTO
             {
-                Id = 0,
                 FieldArea = 1.1f,
                 CustomerId = context.Customers.First().Id,
                 CustomerFirstName = context.Customers.First().FirstName,
@@ -121,9 +119,9 @@ namespace BusinessControlTest
             };
 
             var controller = new FieldJobController(context);
-            var result = await controller.SetFieldJob(newFieldJob);
+            var result = await controller.CreateFieldJob(newFieldJob);
 
-            Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsType<CreatedAtActionResult>(result.Result);
             Assert.Single(context.FieldJobs);
 
             var resultGetFieldJob = await controller.GetFieldJob(1);
@@ -136,7 +134,7 @@ namespace BusinessControlTest
 
             fieldJobToUpdate.FieldArea = 2.2f;
 
-            result = await controller.SetFieldJob(fieldJobToUpdate);
+            result = await controller.UpdateFieldJob(fieldJobToUpdate);
             Assert.IsType<OkObjectResult>(result.Result);
             Assert.Single(context.FieldJobs);
 
@@ -148,18 +146,6 @@ namespace BusinessControlTest
             Assert.NotNull(fieldJobUpdated);
 
             Assert.Equal(2.2f, fieldJobUpdated.FieldArea);
-        }
-
-        [Fact]
-        public async Task SetFieldJob_ReturnsBadRequest_WhenNull()
-        {
-            var context = GetDbContext();
-            await SeedData(context);
-            var controller = new FieldJobController(context);
-
-            var result = await controller.SetFieldJob(null);
-
-            Assert.IsType<BadRequestObjectResult>(result.Result);
         }
     }
 }

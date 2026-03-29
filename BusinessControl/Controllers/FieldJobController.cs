@@ -63,7 +63,7 @@ namespace BusinessControlService.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<FieldJob>> Create(FieldJobDTO dto)
+        public async Task<ActionResult<FieldJob>> CreateFieldJob(FieldJobDTO dto)
         {
             var job = new FieldJob
             {
@@ -81,9 +81,10 @@ namespace BusinessControlService.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<ActionResult<FieldJob>> Update(int id, FieldJobDTO dto)
+        public async Task<ActionResult<FieldJob>> UpdateFieldJob(FieldJobDTO dto)
         {
-            var existing = await _context.FieldJobs.FindAsync(id);
+
+            var existing = await _context.FieldJobs.FindAsync(dto.Id);
 
             if (existing == null)
                 return NotFound();
