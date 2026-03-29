@@ -62,40 +62,40 @@ namespace BusinessControlService.Controllers
         }
 
         [Authorize]
-        [HttpPost("SetFieldJob")]
-        public async Task<ActionResult<FieldJob>> SetFieldJob([FromBody] FieldJobDTO fieldJobDTO)
+        [HttpPost]
+        public async Task<ActionResult<FieldJob>> Create(FieldJobDTO dto)
         {
-            if (fieldJobDTO == null)
-                return BadRequest(new { Message = "FieldJob is null" });
+            var job = new FieldJob
+            {
+                MachineId = dto?.MachineId,
+                FieldArea = dto?.FieldArea ?? 0,
+                CustomerId = dto?.CustomerId,
+                WorkerId = dto?.WorkerId
+            };
 
-            var existing = await _context.FieldJobs.FindAsync(fieldJobDTO.Id);
+            await _context.FieldJobs.AddAsync(job);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetFieldJob), new { id = job.Id }, job);
+        }
+
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<FieldJob>> Update(int id, FieldJobDTO dto)
+        {
+            var existing = await _context.FieldJobs.FindAsync(id);
 
             if (existing == null)
-            {
-                var newJob = new FieldJob
-                {
-                    MachineId = fieldJobDTO.MachineId,
-                    FieldArea = fieldJobDTO.FieldArea,
-                    CustomerId = fieldJobDTO.CustomerId,
-                    WorkerId = fieldJobDTO.WorkerId
-                };
+                return NotFound();
 
-                await _context.FieldJobs.AddAsync(newJob);
-                await _context.SaveChangesAsync();
+            existing.MachineId = dto.MachineId;
+            existing.FieldArea = dto.FieldArea;
+            existing.CustomerId = dto.CustomerId;
+            existing.WorkerId = dto.WorkerId;
 
-                return Ok(newJob);
-            }
-            else
-            {
-                existing.MachineId = fieldJobDTO.MachineId;
-                existing.FieldArea = fieldJobDTO.FieldArea;
-                existing.CustomerId = fieldJobDTO.CustomerId;
-                existing.WorkerId = fieldJobDTO.WorkerId;
+            await _context.SaveChangesAsync();
 
-                await _context.SaveChangesAsync();
-
-                return Ok(existing);
-            }
+            return Ok(existing);
         }
 
         [Authorize]

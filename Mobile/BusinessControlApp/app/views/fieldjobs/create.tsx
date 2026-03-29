@@ -1,17 +1,42 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Button, TextInput, View } from "react-native";
-import { createFieldJob } from "../../api/fieldjob";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Button, TextInput, View } from "react-native";
+import { createEmptyFieldJob, getFieldJobById, updateFieldJob } from "../../api/fieldjob";
 
 export default function CreateJob() {
-
-  const [name, setName] = useState("");
   const router = useRouter();
 
-  const handleCreate = async () => {
-    await createFieldJob({ name });
+  const [jobId, setJobId] = useState<number | null>(null);
+  const [name, setArea] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const created = await createEmptyFieldJob(); 
+        setJobId(created.id);
+
+        const full = await getFieldJobById(created.id);
+        setArea(full.fieldArea ?? "");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
+  }, []);
+
+  // 🔹 zapis
+  const handleSave = async () => {
+    if (!jobId) return;
+
+    await updateFieldJob(jobId, { name });
     router.back();
   };
+
+  if (loading) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <View style={{ padding: 20 }}>
@@ -22,7 +47,7 @@ export default function CreateJob() {
         style={{ borderWidth: 1, marginBottom: 10 }}
       />
 
-      <Button title="Create" onPress={handleCreate} />
+      <Button title="Save" onPress={handleSave} />
     </View>
   );
 }

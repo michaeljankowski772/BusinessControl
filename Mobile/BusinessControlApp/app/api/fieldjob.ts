@@ -54,3 +54,15 @@ export const createFieldJob = (job: Partial<FieldJob>) =>
     method: "POST",
     body: JSON.stringify(job),
   });
+
+  export const createEmptyFieldJob = async () => {
+  const response = await apiFetch(`/fieldjobs`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({})
+  });
+
+  return await response.json();
+};
